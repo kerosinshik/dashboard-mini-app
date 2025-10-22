@@ -5,9 +5,11 @@ import os
 def get_main_menu() -> InlineKeyboardMarkup:
     """Главное меню с основными функциями"""
     webapp_url = os.getenv("WEBAPP_URL", "https://localhost:3000")
+    holidays_url = f"{webapp_url}?view=holidays"
 
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📊 Открыть дашборд", web_app=WebAppInfo(url=webapp_url))],
+        [InlineKeyboardButton(text="🎉 Праздники → Спрос", web_app=WebAppInfo(url=holidays_url))],
         [InlineKeyboardButton(text="📄 PDF отчет", callback_data="report_pdf")],
         [InlineKeyboardButton(text="📊 Excel отчет", callback_data="report_excel")],
         [InlineKeyboardButton(text="🎯 Демо-режим", callback_data="demo_mode")]

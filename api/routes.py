@@ -19,6 +19,12 @@ from api.models import (
     TopProduct,
     TopProductsResponse
 )
+from api.holidays import (
+    get_upcoming_holidays,
+    get_demand_forecast,
+    get_peak_sales_periods,
+    get_category_insights
+)
 
 router = APIRouter()
 
@@ -403,3 +409,31 @@ async def generate_excel(
         media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         filename=f'sales_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
     )
+
+
+# Праздники и спрос
+@router.get("/holidays/upcoming")
+async def api_get_upcoming_holidays(days_ahead: int = 30):
+    """Получить ближайшие праздники"""
+    return {"holidays": get_upcoming_holidays(days_ahead)}
+
+
+@router.get("/holidays/demand/{category}")
+async def api_get_demand_forecast(category: str, days_ahead: int = 30):
+    """Получить прогноз спроса на категорию товаров"""
+    forecast = get_demand_forecast(category, days_ahead)
+    if not forecast:
+        raise HTTPException(status_code=404, detail=f"Категория '{category}' не найдена")
+    return {"category": category, "forecast": forecast}
+
+
+@router.get("/holidays/peaks")
+async def api_get_peak_sales_periods():
+    """Получить пиковые периоды продаж"""
+    return {"peaks": get_peak_sales_periods()}
+
+
+@router.get("/holidays/insights")
+async def api_get_category_insights():
+    """Получить инсайты по всем категориям"""
+    return {"insights": get_category_insights()}

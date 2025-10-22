@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Dashboard from './components/Dashboard';
+import HolidayDemand from './components/HolidayDemand';
 
 function App() {
   const [telegramId, setTelegramId] = useState(null);
   const [isReady, setIsReady] = useState(false);
+  const [view, setView] = useState('dashboard'); // 'dashboard' или 'holidays'
 
   useEffect(() => {
     // Инициализация Telegram Web App
@@ -25,11 +27,26 @@ function App() {
         setTelegramId(123456789);
       }
 
+      // Проверяем URL параметры для переключения вида
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewParam = urlParams.get('view');
+      if (viewParam === 'holidays') {
+        setView('holidays');
+      }
+
       setIsReady(true);
     } else {
       // Для разработки вне Telegram
       console.warn('Запуск вне Telegram, используется тестовый ID');
       setTelegramId(123456789);
+
+      // Проверяем URL параметры
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewParam = urlParams.get('view');
+      if (viewParam === 'holidays') {
+        setView('holidays');
+      }
+
       setIsReady(true);
     }
   }, []);
@@ -61,7 +78,17 @@ function App() {
     );
   }
 
-  return <Dashboard telegramId={telegramId} />;
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {view === 'dashboard' ? (
+        <Dashboard telegramId={telegramId} />
+      ) : (
+        <div className="container mx-auto px-4 py-6">
+          <HolidayDemand />
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default App;

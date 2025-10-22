@@ -53,6 +53,31 @@ export const api = {
   getUser: async (telegramId) => {
     const response = await apiClient.get(`/user/${telegramId}`);
     return response.data;
+  },
+
+  // Праздники и спрос
+  getUpcomingHolidays: async (daysAhead = 30) => {
+    const response = await apiClient.get(`/holidays/upcoming`, {
+      params: { days_ahead: daysAhead }
+    });
+    return response.data;
+  },
+
+  getDemandForecast: async (category, daysAhead = 30) => {
+    const response = await apiClient.get(`/holidays/demand/${category}`, {
+      params: { days_ahead: daysAhead }
+    });
+    return response.data;
+  },
+
+  getPeakSalesPeriods: async () => {
+    const response = await apiClient.get(`/holidays/peaks`);
+    return response.data;
+  },
+
+  getCategoryInsights: async () => {
+    const response = await apiClient.get(`/holidays/insights`);
+    return response.data;
   }
 };
 
